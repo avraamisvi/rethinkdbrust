@@ -9,7 +9,6 @@ use std::thread::sleep_ms;
 use std::collections::BTreeMap;
 use RethinkDB;
 use api::*;
-use core::*;
 
 
 // // socat  -v -x TCP4-LISTEN:7888,fork,reuseaddr TCP4:localhost:28015
@@ -64,8 +63,11 @@ fn test_get() {
     //db.table("person_get").insert(nachoData).run(&mut rethinkdb);
 
     let nacho_json = db.table("person_get").get(Json::String("Nacho".to_string())).run(&mut rethinkdb);
-    println!("{:?}", nacho_json);
-    match nacho_json.find_path(&["r", "name"]).unwrap() {
+    println!("RESONSE OF GET {:?}", nacho_json);
+    let result_array = &nacho_json.find("r").unwrap()[0];
+    println!("RESULT ARRAY{:?}", result_array);
+
+    match result_array.search(&"name").unwrap() {
         &Json::String(ref name) => assert_eq!(*name, "Nacho".to_string()),
         _ => panic!("The returned object is strange")
     }

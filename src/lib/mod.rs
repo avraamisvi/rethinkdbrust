@@ -9,6 +9,7 @@ mod client;
 mod test;
 pub use client::*;
 pub mod api {
+	pub use core::*;
 	pub use core::select::*;
 	pub use core::table::*;
 }
