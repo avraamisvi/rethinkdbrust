@@ -36,6 +36,10 @@ macro_rules! json_i64 {
     ($s:expr) => { Json::I64($s) }
 }
 
+macro_rules! json_bool {
+    ($s:expr) => { Json::Boolean($s) }
+}
+
 pub mod ql2;
 
 /// All provides default `run` function for all RQLQueries.
@@ -45,7 +49,7 @@ pub trait RQLQuery<'a> {
     fn run(&'a self, rethinkdb : &mut RethinkDB) -> json::Json {
 
         rethinkdb.send(Json::Array(vec![Json::I64(1), self.to_query_types()]))
-        
+
     }
 
     /// All implementations knows how to convert to the right Json protocol required by
