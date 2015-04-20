@@ -12,12 +12,6 @@ use api::*;
 use core::*;
 
 
-
-struct Person {
-    name : String,
-    age  : i32
-}
-
 // // socat  -v -x TCP4-LISTEN:7888,fork,reuseaddr TCP4:localhost:28015
 // #[test]
 // fn test_create() {
@@ -58,7 +52,7 @@ struct Person {
 
 #[test]
 fn test_get() {
-    let mut rethinkdb = RethinkDB::connect("localhost", 7888, "", 3);
+/*    let mut rethinkdb = RethinkDB::connect("localhost", 7888, "", 3);
     let db = db("test");
 
     //let tc = db.table_create("person_get").primary_key("name".to_string()).run(&mut rethinkdb);
@@ -76,32 +70,11 @@ fn test_get() {
         _ => panic!("The returned object is strange")
     }
 
-/*=======
     let tc = db.table_create("person_get").primary_key("name".to_string()).run(&mut rethinkdb);
     sleep_ms(5000);
 
-    let mut nacho_data = BTreeMap::new();
-    nacho_data.insert("name".to_string(), Json::String("Nacho".to_string()));
-    nacho_data.insert("age".to_string(), Json::I64(6i64));
->>>>>>> created write module*/
-
-    /*#[derive(RustcDecodable, RustcEncodable)]
-    struct Person  {
-        name: String,
-        age: i64
-    }
-
-    let nachoData = Person{
-        name: "Nacho".to_string(),
-        age: 6
-    };
-
-        let encoded = json::encode(&nacho_data).unwrap();
-    */
-
-
     db.table("person_get").insert(Json::Object(nachoData)).run(&mut rethinkdb);
     db.table("person_get").get(Json::String("Nacho".to_string())).run(&mut rethinkdb);
-
+*/
 
 }
