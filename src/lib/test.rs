@@ -7,7 +7,9 @@ use std::string::String;
 use std::thread::sleep_ms;
 use std::collections::BTreeMap;
 use RethinkDB;
+use api::*;
 use core::*;
+
 
 
 struct Person {
