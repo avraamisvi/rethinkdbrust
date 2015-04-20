@@ -32,7 +32,8 @@ pub struct Connection {
     pub host : String,
     pub port : u16,
     stream   : TcpStream,
-    auth     : String
+    auth     : String,
+    token    : i64
 }
 
 impl Connection {
@@ -46,7 +47,8 @@ impl Connection {
                 host    : host.to_string(),
                 port    : port,
                 stream  : stream,
-                auth    : auth.to_string()
+                auth    : auth.to_string(),
+                token   : 1i64, //TODO: Should be reseted after a lot of queries.
         };
 
         conn.handshake();
@@ -75,7 +77,8 @@ impl Connection {
     /// Talks to the server sending and reading back the propper JSON messages
     fn send(&mut self, json : Json) -> Json {
 
-        self.stream.write_i64::<LittleEndian>(1i64);
+        self.token += 1;
+        self.stream.write_i64::<LittleEndian>(self.token);
         let message = json.to_string();
         let len = message.len();
         self.stream.write_i32::<LittleEndian>(len as i32);
