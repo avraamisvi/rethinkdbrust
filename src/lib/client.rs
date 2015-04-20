@@ -1,5 +1,3 @@
-
-
 use std::thread;
 use std::sync::{Arc, Mutex};
 use rustc_serialize::json;
@@ -8,7 +6,7 @@ use std::io::{BufStream, Error, Write, Read, BufRead};
 use std::net::TcpStream;
 use byteorder::{ReadBytesExt, WriteBytesExt, LittleEndian};
 use std::str;
-use ql2::*;
+use core::ql2::*;
 
 
 #[derive(Debug)]

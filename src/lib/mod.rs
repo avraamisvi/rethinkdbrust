@@ -3,10 +3,16 @@
 extern crate byteorder;
 extern crate rustc_serialize;
 
-pub mod api;
+mod core;
 mod client;
 
-mod ql2;
 mod test;
-// pub use api::*;
 pub use client::*;
+pub mod api {
+	pub use core::select::*;
+	pub use core::table::*;
+}
+
+
+
+
