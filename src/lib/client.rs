@@ -154,17 +154,7 @@ impl Connection {
 
 }
 
-//The main interface entrance. User could should start interactions with RethinkDB
-/// # Examples
-///
-/// ```no_run
-/// use rethinkdb::RethinkDB;
-/// use rethinkdb::api::*;
-///
-/// let mut rethinkdb = RethinkDB::connect("localhost", 7888, "AUTH", 3);
-/// db("test").table_create("person_create").replicas(1i32).run(&mut rethinkdb);
-/// ```
-
+/// Connects and holds a pool of connections to RethinkDB.
 pub struct RethinkDB {
     pool : Connection
 }

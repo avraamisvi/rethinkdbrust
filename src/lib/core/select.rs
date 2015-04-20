@@ -31,7 +31,8 @@ pub struct Table<'a> {//TODO criar um so struct ( Command? )
     name : String
 }
 
-/// Producs a `Db` instance.
+/// Starting point for any databse interaction. Takes database name as arg
+/// and gives you access to methods to interact with RethinkDB.
 pub fn db(name : &str) -> Db {
     Db {
         term : Term_TermType::DB,

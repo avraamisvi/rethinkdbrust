@@ -9,7 +9,7 @@ use std::thread::sleep_ms;
 use std::collections::BTreeMap;
 use RethinkDB;
 use RQLResponse;
-use api::*;
+use r::*;
 
 
 // // socat  -v -x TCP4-LISTEN:7888,fork,reuseaddr TCP4:localhost:28015

@@ -8,7 +8,7 @@ mod client;
 
 mod test;
 pub use client::*;
-pub mod api {
+pub mod r {
 	pub use core::*;
 	pub use core::select::*;
 	pub use core::table::*;
