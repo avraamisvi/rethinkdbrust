@@ -1,5 +1,5 @@
 use core::ql2::*;
-use core::{RQLQuery, TableInsert};
+use core::{RQLQuery};
 use rustc_serialize::json;
 use rustc_serialize::json::Json;
 use std::string::String;
@@ -7,6 +7,7 @@ use std::collections::BTreeMap;
 use std::str;
 use client::RethinkDB;
 use core::table::{TableCreate, TableDrop};
+use core::write::{Insert};
 
 /// Represents `db` command. Must be constructed with `rethinkdb::api::db`.
 pub struct Db {
@@ -74,8 +75,8 @@ impl<'a> RQLQuery<'a> for Db {
 
 impl<'a> Table<'a> {
 
-    pub fn insert (&'a self, object: BTreeMap<String, json::Json>) -> TableInsert { // TODO: fix this type. must be Json::Object
-        TableInsert::new(self, object)
+    pub fn insert (&'a self, object: Json) -> Insert { // TODO: fix this type. must be Json::Object
+        Insert::new(self, object)
     }
 
     pub fn get(&self, pk : Json) -> Get {
@@ -84,7 +85,7 @@ impl<'a> Table<'a> {
 }
 
 
-/// This is the main implementation of this API. All commands must be created from 
+/// This is the main implementation of this API. All commands must be created from
 /// a `Db` instance;
 impl Db {
 
