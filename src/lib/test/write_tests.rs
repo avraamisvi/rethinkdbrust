@@ -17,10 +17,27 @@ fn test_insert() {
     let db = db("test");
 
     let mut nachoData = BTreeMap::new();
+    nachoData.insert("id".to_string(), Json::I64(1i64));
     nachoData.insert("name".to_string(), Json::String("Tomate".to_string()));
     nachoData.insert("age".to_string(), Json::I64(6i64));
 
     let res = db.table("person_get").insert(Json::Object(nachoData)).run(&mut rethinkdb);
+
+    println!("{:?}", res);
+}
+
+#[test]
+fn test_replace() {
+    let mut rethinkdb = RethinkDB::connect("localhost", 7888, "", 3);
+    let db = db("test");
+
+    let mut nachoData = BTreeMap::new();
+    nachoData.insert("id".to_string(), Json::I64(1i64));
+    nachoData.insert("name".to_string(), Json::String("Nacho".to_string()));
+    nachoData.insert("age".to_string(), Json::I64(6i64));
+    nachoData.insert("weight".to_string(), Json::I64(100i64));
+
+    let res = db.table("person_get").update(Json::Object(nachoData)).run(&mut rethinkdb);
 
     println!("{:?}", res);
 }
