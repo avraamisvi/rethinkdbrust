@@ -16,6 +16,7 @@ pub struct Db {
     name : String
 }
 
+/// Represents `get` command.
 pub struct Get<'a> {
     term : Term_TermType,
     stm  : String,
@@ -23,7 +24,7 @@ pub struct Get<'a> {
     pk   : Json
 }
 
-
+/// Represents `db` command.
 pub struct Table<'a> {//TODO criar um so struct ( Command? )
     term : Term_TermType,
     stm  : String,
@@ -76,10 +77,12 @@ impl<'a> RQLQuery<'a> for Db {
 
 impl<'a> Table<'a> {
 
+    /// Inserts the given `object` into the databse.
     pub fn insert (&'a self, object: Json) -> Insert { // TODO: fix this type. must be Json::Object
         Insert::new(self, object)
     }
 
+    /// Returns a single row by `primary_key`
     pub fn get(&self, pk : Json) -> Get {
         Get::new(self, pk)
     }
@@ -90,11 +93,12 @@ impl<'a> Table<'a> {
 /// a `Db` instance;
 impl Db {
 
-
+    ///  Creates table named `name`.
     pub fn table_create (&self, name : &str) -> TableCreate {
         TableCreate::new(self, name)
     }
 
+    /// Given the table `name`, returns all data.
     pub fn table (&self, name : &str) -> Table {
         Table {
             term : Term_TermType::TABLE,
@@ -104,6 +108,7 @@ impl Db {
         }
     }
 
+    /// Drops the table from the database.
     pub fn table_drop(&self, name : &str) -> TableDrop {
         TableDrop::new(self, name)
     }

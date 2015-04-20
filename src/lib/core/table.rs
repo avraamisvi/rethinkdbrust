@@ -21,6 +21,7 @@ pub struct TableCreate<'a> {
     primary_replica_tag : String
 }
 
+/// Representes `table_drop` command.
 pub struct TableDrop<'a> {
     term : Term_TermType,
     stm  : String,
@@ -41,6 +42,7 @@ impl<'a> TableDrop<'a> {
 
 
 impl<'a> TableCreate<'a> {
+    
     pub fn new(db : &'a Db, name : &str) -> TableCreate<'a> {
         TableCreate {
             term : Term_TermType::TABLE_CREATE,
@@ -54,16 +56,19 @@ impl<'a> TableCreate<'a> {
         }
     }
 
+    /// Sets the primary key field to the newly created table. Defaults to `id`.
     pub fn primary_key(&'a mut self, primary_key : String) -> &mut TableCreate<'a> {
         self.primary_key = primary_key.clone();
         self
     }
-
+    
+    /// Sets the number of replicas to the newly created table. Defaults to `1`.
     pub fn replicas(&'a mut self, total : i32) -> &mut TableCreate<'a> {
         self.replicas = total;
         self
     }
-
+    
+    /// Sets the number of shards to the newly created table. Defaults to `1`.
     pub fn shards(&'a mut self, total : i32) -> &mut TableCreate<'a> {
         self.shards = total;
         self

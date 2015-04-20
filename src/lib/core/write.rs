@@ -8,6 +8,7 @@ use std::str;
 use client::RethinkDB;
 use core::select::{Table};
 
+/// Represents the `insert` command
 pub struct Insert<'a> {
     term    : Term_TermType,
     stm     : String,
@@ -18,6 +19,7 @@ pub struct Insert<'a> {
     return_changes: bool
 }
 
+/// Represents the `update` command.
 pub struct Update<'a> {
     term    : Term_TermType,
     stm     : String,
@@ -28,6 +30,7 @@ pub struct Update<'a> {
     return_changes: bool
 }
 
+/// Represents the `replace` command.
 pub struct Replace<'a> {
     term    : Term_TermType,
     stm     : String,
