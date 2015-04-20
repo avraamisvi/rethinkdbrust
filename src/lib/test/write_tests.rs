@@ -37,7 +37,7 @@ fn test_replace() {
     nachoData.insert("age".to_string(), Json::I64(6i64));
     nachoData.insert("weight".to_string(), Json::I64(100i64));
 
-    let res = db.table("person_get").update(Json::Object(nachoData)).run(&mut rethinkdb);
+    let res = db.table("person_get").replace(Json::Object(nachoData)).run(&mut rethinkdb);
 
     println!("{:?}", res);
 }
