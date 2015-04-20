@@ -92,12 +92,13 @@ impl Connection {
         let mut buf = BufStream::new(&self.stream);
         
         let mut c = Vec::with_capacity(recv_len as usize);
+        unsafe { c.set_len(recv_len as usize) };
         buf.read(&mut c);
         let json_recv = str::from_utf8(&c).ok().unwrap();
 
         
         let mut recv_json = json::Json::from_str(json_recv);
-        println!("{:?}", json_recv);
+        println!("RESPONSE {:?}", recv_json);
         recv_json.ok().unwrap()
 
     }

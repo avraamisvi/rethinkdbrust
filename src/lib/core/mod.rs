@@ -54,10 +54,10 @@ pub struct TableInsert<'a> {
 pub trait RQLQuery<'a> {
 
     /// Takes a mutable reference of `RethinkDB` that handles the connection pool.
-    fn run(&'a self, rethinkdb : &mut RethinkDB) -> bool {
+    fn run(&'a self, rethinkdb : &mut RethinkDB) -> json::Json {
 
-        rethinkdb.send(Json::Array(vec![Json::I64(1), self.to_query_types()]));
-        true
+        rethinkdb.send(Json::Array(vec![Json::I64(1), self.to_query_types()]))
+        
     }
     
     /// All implementations knows how to convert to the right Json protocol required by
