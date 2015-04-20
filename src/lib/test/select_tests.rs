@@ -51,7 +51,7 @@ use api::*;
 
 #[test]
 fn test_get() {
-/*    let mut rethinkdb = RethinkDB::connect("localhost", 7888, "", 3);
+    let mut rethinkdb = RethinkDB::connect("localhost", 7888, "", 3);
     let db = db("test");
 
     //let tc = db.table_create("person_get").primary_key("name".to_string()).run(&mut rethinkdb);
@@ -77,6 +77,6 @@ fn test_get() {
 
     db.table("person_get").insert(Json::Object(nachoData)).run(&mut rethinkdb);
     db.table("person_get").get(Json::String("Nacho".to_string())).run(&mut rethinkdb);
-*/
+
 
 }

@@ -7,18 +7,44 @@ use std::net::TcpStream;
 use byteorder::{ReadBytesExt, WriteBytesExt, LittleEndian};
 use std::str;
 use core::ql2::*;
-
+use byteorder::Error as BError;
+use rustc_serialize::json::ParserError;
 
 #[derive(Debug)]
 pub enum RethinkDBError {
     InternalIoError(Error),
-    ServerError
+    ServerError,
+    WriteError(BError),
+    JsonParseError(ParserError)
+}
+
+impl From<ParserError> for RethinkDBError {
+    fn from (err : ParserError) -> RethinkDBError {
+        RethinkDBError::JsonParseError(err)
+    }
+}
+
+impl From<BError> for RethinkDBError {
+    fn from (err : BError) ->  RethinkDBError {
+        RethinkDBError::WriteError(err)
+    }
+
 }
 
 impl From<Error> for RethinkDBError {
     fn from(err: Error) -> RethinkDBError {
         RethinkDBError::InternalIoError(err)
     }
+}
+
+struct Cursor {
+    name : String
+}
+
+
+pub enum RQLResponse {
+    Value(Json),
+    Cursor(Cursor)
 }
 
 pub type RethinkDBResult<T> = Result<T, RethinkDBError>;
@@ -73,7 +99,7 @@ impl Connection {
     }
 
     /// Talks to the server sending and reading back the propper JSON messages
-    fn send(&mut self, json : Json) -> Json {
+    fn send(&mut self, json : Json) -> RethinkDBResult<RQLResponse> {
 
         self.token += 1;
         self.stream.write_i64::<LittleEndian>(self.token);
@@ -83,23 +109,39 @@ impl Connection {
         println!("{}",message);
         write!(self.stream, "{}", message);
         self.stream.flush();
+        self.recv()
+    }
 
-        //Read result. Should go into a different method?
+    fn recv(&mut self) ->  RethinkDBResult<RQLResponse> {  //Read result. Should go into a different method?
 
-        let recv_token = self.stream.read_i64::<LittleEndian>().ok().unwrap();
-        let recv_len = self.stream.read_i32::<LittleEndian>().ok().unwrap();
+        let recv_token = try!{self.stream.read_i64::<LittleEndian>()};
+        let recv_len = try!{self.stream.read_i32::<LittleEndian>()};
 
         let mut buf = BufStream::new(&self.stream);
         
         let mut c = Vec::with_capacity(recv_len as usize);
         unsafe { c.set_len(recv_len as usize) };
         buf.read(&mut c);
-        let json_recv = str::from_utf8(&c).ok().unwrap();
+        let json_str = str::from_utf8(&c).ok().unwrap();
 
         
-        let mut recv_json = json::Json::from_str(json_recv);
-        println!("RESPONSE {:?}", recv_json);
-        recv_json.ok().unwrap()
+        let mut recv_json = try!{json::Json::from_str(json_str)};
+
+        match recv_json {
+            Ok(obj) if obj.is_objec() => {
+                match obj.find("t") {
+                    Ok(Json::I64(s)) if s == Response_ResponseType::SUCCESS_ATOM as i64 => {
+                        match obj.find("r") {
+                            Ok(o) => Ok(RQLResponse::Value(o)),
+                            _ => panic!("r is not present")
+                        }
+                    },
+                    _ => panic!("Right now we support SUCCESS_ATOM only")
+
+                }
+            }
+            _ => panic!("Failed to parse json")
+        }
 
     }
 
