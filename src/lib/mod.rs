@@ -29,7 +29,7 @@ let mut rethinkdb = RethinkDB::connect("localhost", 7888, "AUTH", 3);
 db("test").table_create("person_create").replicas(1i32).run(&mut rethinkdb);
 ```
 */	
-	
+	pub use core::RQLQuery;
 	pub use core::select::*;
 	pub use core::table::*;
 	pub use core::write::*;

@@ -65,17 +65,10 @@ fn test_get() {
     let name = Json::String("Nacho".to_string());
     let result = db.table("person_get").get(name).run(&mut rethinkdb).ok().unwrap();
     println!("{:?}", result);
-    match result { // All the stuff below can be moved to RQLResponse
-        RQLResponse::Value(json) => {
-            let a = json.as_array().unwrap();
-            match a[0].find("name").unwrap() {
-                &Json::String(ref n) => assert_eq!(*n, "Nacho"),
-                _ => panic!("Something strange returned")
-            }
-
-            
-
-        }
-        _ => panic!("Something wrong")
+    let a = result.single_row().unwrap();
+    match a.find("name").unwrap() {
+        &Json::String(ref n) => assert_eq!(*n, "Nacho"),
+        _ => panic!("Something strange returned")
     }
+   
 }

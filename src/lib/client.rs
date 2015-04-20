@@ -50,9 +50,30 @@ pub enum RQLResponse {
 
 impl RQLResponse {
 
+    /// Converts the giver `RQLResponse` to Json. But only if it is a RQLResponse::Value
     pub fn as_json<'a>(&'a self) -> Option<&'a Json> {
         match self {
             &RQLResponse::Value(ref json) => Some(json),
+            _ => None
+        }
+    }
+
+    /// if self is a RQLResponse::Value with a single element Json::Array inside, returns this
+    /// element
+    pub fn single_row<'a>(&'a self) -> Option<&'a Json> {
+        match self {
+            &RQLResponse::Value(ref v) => {
+                match v.as_array() {
+                    Some(ref a) => {
+                        if a.len() == 1 {
+                            return Some(&a[0])
+                        } else {
+                            return None
+                        }
+                    },
+                    _ => None
+                }
+            },
             _ => None
         }
     }
