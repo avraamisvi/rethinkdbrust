@@ -8,6 +8,7 @@ use std::string::String;
 use std::thread::sleep_ms;
 use std::collections::BTreeMap;
 use RethinkDB;
+use RQLResponse;
 use api::*;
 
 
@@ -61,22 +62,20 @@ fn test_get() {
     nachoData.insert("age".to_string(), Json::I64(6i64));
 
     //db.table("person_get").insert(nachoData).run(&mut rethinkdb);
+    let name = Json::String("Nacho".to_string());
+    let result = db.table("person_get").get(name).run(&mut rethinkdb).ok().unwrap();
+    println!("{:?}", result);
+    match result { // All the stuff below can be moved to RQLResponse
+        RQLResponse::Value(json) => {
+            let a = json.as_array().unwrap();
+            match a[0].find("name").unwrap() {
+                &Json::String(ref n) => assert_eq!(*n, "Nacho"),
+                _ => panic!("Something strange returned")
+            }
 
-    let nacho_json = db.table("person_get").get(Json::String("Nacho".to_string())).run(&mut rethinkdb);
-    println!("RESONSE OF GET {:?}", nacho_json);
-    let result_array = &nacho_json.find("r").unwrap()[0];
-    println!("RESULT ARRAY{:?}", result_array);
+            
 
-    match result_array.search(&"name").unwrap() {
-        &Json::String(ref name) => assert_eq!(*name, "Nacho".to_string()),
-        _ => panic!("The returned object is strange")
+        }
+        _ => panic!("Something wrong")
     }
-
-    let tc = db.table_create("person_get").primary_key("name".to_string()).run(&mut rethinkdb);
-    sleep_ms(5000);
-
-    db.table("person_get").insert(Json::Object(nachoData)).run(&mut rethinkdb);
-    db.table("person_get").get(Json::String("Nacho".to_string())).run(&mut rethinkdb);
-
-
 }

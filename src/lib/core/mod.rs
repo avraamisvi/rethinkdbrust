@@ -3,7 +3,7 @@ use rustc_serialize::json::Json;
 use std::string::String;
 use std::collections::BTreeMap;
 use std::str;
-use client::RethinkDB;
+use client::{RethinkDB, RethinkDBResult, RQLResponse};
 
 
 macro_rules! json_array {
@@ -46,7 +46,7 @@ pub mod ql2;
 pub trait RQLQuery<'a> {
 
     /// Takes a mutable reference of `RethinkDB` that handles the connection pool.
-    fn run(&'a self, rethinkdb : &mut RethinkDB) -> json::Json {
+    fn run(&'a self, rethinkdb : &mut RethinkDB) -> RethinkDBResult<RQLResponse> {
 
         rethinkdb.send(Json::Array(vec![Json::I64(1), self.to_query_types()]))
 

@@ -37,14 +37,25 @@ impl From<Error> for RethinkDBError {
     }
 }
 
-struct Cursor {
+#[derive(Debug)]
+pub struct Cursor {
     name : String
 }
 
-
+#[derive(Debug)]
 pub enum RQLResponse {
     Value(Json),
     Cursor(Cursor)
+}
+
+impl RQLResponse {
+
+    pub fn as_json<'a>(&'a self) -> Option<&'a Json> {
+        match self {
+            &RQLResponse::Value(ref json) => Some(json),
+            _ => None
+        }
+    }
 }
 
 pub type RethinkDBResult<T> = Result<T, RethinkDBError>;
@@ -121,28 +132,24 @@ impl Connection {
         
         let mut c = Vec::with_capacity(recv_len as usize);
         unsafe { c.set_len(recv_len as usize) };
-        buf.read(&mut c);
+        try!{buf.read(&mut c)};
         let json_str = str::from_utf8(&c).ok().unwrap();
 
         
         let mut recv_json = try!{json::Json::from_str(json_str)};
 
-        match recv_json {
-            Ok(obj) if obj.is_objec() => {
-                match obj.find("t") {
-                    Ok(Json::I64(s)) if s == Response_ResponseType::SUCCESS_ATOM as i64 => {
-                        match obj.find("r") {
-                            Ok(o) => Ok(RQLResponse::Value(o)),
-                            _ => panic!("r is not present")
-                        }
-                    },
-                    _ => panic!("Right now we support SUCCESS_ATOM only")
-
+        match recv_json.find("t") {
+            Some(&Json::U64(s)) if s == Response_ResponseType::SUCCESS_ATOM as u64 => {
+                match recv_json.find("r") {
+                    Some(o) => Ok(RQLResponse::Value(o.clone())),
+                    _ => panic!("r is not present")
                 }
-            }
-            _ => panic!("Failed to parse json")
+            },
+            Some(v) => { println!("T TYPE IS {:?}", v);   
+                         panic!("Right now we support SUCCESS_ATOM only") 
+            },
+            _ => panic!("OOOFF")
         }
-
     }
 
 }
@@ -175,7 +182,7 @@ impl RethinkDB {
     /// Used to safely grab a reusable connection from the pool and talk to 
     /// the server.
     #[inline(always)]
-    pub fn send(&mut self, message : Json) -> Json {
+    pub fn send(&mut self, message : Json) -> RethinkDBResult<RQLResponse> {
         // let con_arc = self.pool.clone();
         // let mut pool = con_arc.lock().unwrap();
         // let mut conn = &mut pool.checkout().unwrap();
