@@ -10,6 +10,7 @@ use std::collections::BTreeMap;
 use RethinkDB;
 use r::*;
 
+use rand::*;
 
 #[test]
 fn test_insert() {
@@ -17,7 +18,7 @@ fn test_insert() {
     let db = db("test");
 
     let mut nachoData = BTreeMap::new();
-    nachoData.insert("id".to_string(), Json::I64(1i64));
+    nachoData.insert("id".to_string(), Json::I64(11i64));
     nachoData.insert("name".to_string(), Json::String("Tomate".to_string()));
     nachoData.insert("age".to_string(), Json::I64(6i64));
 
@@ -32,10 +33,10 @@ fn test_replace() {
     let db = db("test");
 
     let mut nachoData = BTreeMap::new();
-    nachoData.insert("id".to_string(), Json::I64(1i64));
+    nachoData.insert("id".to_string(), Json::I64(11i64));
     nachoData.insert("name".to_string(), Json::String("Nacho".to_string()));
     nachoData.insert("age".to_string(), Json::I64(6i64));
-    nachoData.insert("weight".to_string(), Json::I64(100i64));
+    nachoData.insert("weight".to_string(), Json::I64(thread_rng().gen::<i64>()));
 
     let res = db.table("person_get").replace(Json::Object(nachoData)).run(&mut rethinkdb);
 

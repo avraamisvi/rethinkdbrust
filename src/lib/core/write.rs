@@ -44,23 +44,6 @@ pub struct Replace<'a> {
 impl<'a> RQLQuery<'a> for Insert<'a> {
     fn to_query_types(&'a self) -> Json {
 
-        /*let mut j = Vec::new();
-        j.push(Json::I64(self.term.clone() as i64));
-
-        let mut jd = Vec::new();
-        jd.push(self.table.to_query_types());
-
-        jd.push(self.object.clone());
-
-        let mut d = BTreeMap::new();
-        d.insert("conflict".to_string(), Json::String(self.conflict));
-        d.insert("durability".to_string(), Json::String(self.durability));//?
-        d.insert("return_changes".to_string(), Json::Boolean(self.return_changes));//?
-        j.push(Json::Array(jd));
-        j.push(Json::Object(d));
-        Json::Array(j)*/
-
-        //============================
         json_array![
             json_i64!(self.term.clone() as i64),
             json_array![
@@ -80,22 +63,6 @@ impl<'a> RQLQuery<'a> for Insert<'a> {
 impl<'a> RQLQuery<'a> for Update<'a> {
     fn to_query_types(&'a self) -> Json {
 
-        /*let mut j = Vec::new();
-        j.push(Json::I64(self.term.clone() as i64));
-
-        let mut jd = Vec::new();
-        jd.push(self.table.to_query_types());
-
-        jd.push(self.object.clone());
-
-        let mut d = BTreeMap::new();
-        d.insert("non_atomic".to_string(), Json::Boolean(self.non_atomic));
-        d.insert("durability".to_string(), Json::String(self.durability));//?
-        d.insert("return_changes".to_string(), Json::Boolean(self.return_changes));//?
-        j.push(Json::Array(jd));
-        j.push(Json::Object(d));
-        Json::Array(j)*/
-
         json_array![
             json_i64!(self.term.clone() as i64),
             json_array![
@@ -114,22 +81,6 @@ impl<'a> RQLQuery<'a> for Update<'a> {
 
 impl<'a> RQLQuery<'a> for Replace<'a> {
     fn to_query_types(&'a self) -> Json {
-
-        /*let mut j = Vec::new();
-        j.push(Json::I64(self.term.clone() as i64));
-
-        let mut jd = Vec::new();
-        jd.push(self.table.to_query_types());
-
-        jd.push(self.object.clone());
-
-        let mut d = BTreeMap::new();
-        d.insert("non_atomic".to_string(), Json::Boolean(self.non_atomic));
-        d.insert("durability".to_string(), Json::String(self.durability));//?
-        d.insert("return_changes".to_string(), Json::Boolean(self.return_changes));//?
-        j.push(Json::Array(jd));
-        j.push(Json::Object(d));
-        Json::Array(j)*/
 
         json_array![
             json_i64!(self.term.clone() as i64),

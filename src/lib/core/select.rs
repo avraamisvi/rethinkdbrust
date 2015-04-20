@@ -7,7 +7,7 @@ use std::collections::BTreeMap;
 use std::str;
 use client::RethinkDB;
 use core::table::{TableCreate, TableDrop};
-use core::write::{Insert};
+use core::write::{Insert, Replace};
 
 /// Represents `db` command. Must be constructed with `rethinkdb::api::db`.
 pub struct Db {
@@ -78,13 +78,18 @@ impl<'a> RQLQuery<'a> for Db {
 impl<'a> Table<'a> {
 
     /// Inserts the given `object` into the databse.
-    pub fn insert (&'a self, object: Json) -> Insert { // TODO: fix this type. must be Json::Object
+    pub fn insert (&'a self, object: Json) -> Insert {
         Insert::new(self, object)
     }
 
     /// Returns a single row by `primary_key`
     pub fn get(&self, pk : Json) -> Get {
         Get::new(self, pk)
+    }
+
+    /// Accepts a given `object` and replaces the original.
+    pub fn replace (&'a self, object: Json) -> Replace {
+        Replace::new(self, object)
     }
 }
 
