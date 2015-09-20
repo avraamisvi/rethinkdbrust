@@ -1,6 +1,6 @@
 # RethinkDB 2.0 Rust Driver
 
-This is a very early stage WIP driver for json protocol. Compatible with Rust beta.
+This is a very early stage WIP driver for json protocol.
 
 # Example
 
