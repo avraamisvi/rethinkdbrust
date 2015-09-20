@@ -1,8 +1,7 @@
- #![feature(core)]
- #[warn(unused_imports)]
 extern crate byteorder;
 extern crate rustc_serialize;
 extern crate rand;
+extern crate bufstream;
 
 mod core;
 mod client;

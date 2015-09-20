@@ -13,6 +13,7 @@ Rust native driver for RethinkDB 2.0. WIP.
 rustc-serialize = "*"
 byteorder = "*"
 rand = "*"
+bufstream = "0.1"
 
 [lib]
 name = "rethinkdb"
